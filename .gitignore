@@ -1,2 +1,6 @@
 .agents/
 .stitch/
+
+# Arquivos de contexto local para agentes de IA
+PROJECT_CONTEXT.md
+ESTRUTURA.md
