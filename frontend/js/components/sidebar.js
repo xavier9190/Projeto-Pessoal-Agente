@@ -42,7 +42,7 @@ class AppSidebar extends HTMLElement {
     </nav>
 
     <!-- Divider -->
-    <hr class="mx-4 border-t border-outline-variant opacity-40">
+    <hr class="mx-4 mt-4 border-t border-outline-variant opacity-40">
 
     <!-- Histórico de Conversas -->
     <div class="px-4 pt-4 pb-2 flex-1 overflow-y-auto min-h-0">
@@ -83,19 +83,6 @@ class AppSidebar extends HTMLElement {
                     <p class="text-on-surface-variant opacity-50 truncate" style="font-size:11px;line-height:16px">Dom., 09:15</p>
                 </div>
             </a>
-        </div>
-    </div>
-
-    <!-- Divider before user profile -->
-    <hr class="mx-4 border-t border-outline-variant opacity-40">
-
-    <div class="p-4 mt-2 mb-4">
-        <div class="flex items-center gap-3 p-3 glass-panel rounded-xl">
-            <img class="w-10 h-10 rounded-full border border-outline-variant object-cover" data-alt="User Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdIzylzSZrKbZG-UDMJg7VfehuamNW_pWz4JwWsGCu4qt1-2b8DL3zWdDSboJ4XPuieOelm8oUdMDb5UE49dsW-_lRkeZNkKP6Xlc0LAi6B4_HzCfjY8a1NyIlPjVeSauj1n4Lwn9_-ei3Zsd-sC76kRfuX03SDzpxceJbF6do9GRU9ctq95caMwKYXpnXJh5vXsm5ePDwq0HCRxULQZkQ2Ca-FhNNMfEiG6leMwEmAMFaD0LsHKRHxk4NbVLaIHsVb-Zo6hkSWvg">
-            <div class="overflow-hidden">
-                <p class="text-on-surface font-semibold truncate">Alexandre S.</p>
-                <p class="text-on-surface-variant text-xs truncate">Premium Plan</p>
-            </div>
         </div>
     </div>
 </aside>
@@ -144,11 +131,11 @@ class AppSidebar extends HTMLElement {
             // Execute scripts inside main/header
             const scripts = document.querySelectorAll('main script, header script');
             scripts.forEach(script => {
-                const newScript = document.createElement('script');
+                    const newScript = document.createElement('script');
                 if (script.src) newScript.src = script.src;
-                newScript.textContent = script.textContent;
-                document.body.appendChild(newScript);
-            });
+                        newScript.textContent = script.textContent;
+                    document.body.appendChild(newScript);
+                });
 
             // Update URL
             if (pushState) {

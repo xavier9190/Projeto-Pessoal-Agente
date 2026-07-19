@@ -1,5 +1,7 @@
 .agents/
 .stitch/
+.env
+google_credentials.json
 
 # Arquivos de contexto local para agentes de IA
 PROJECT_CONTEXT.md
