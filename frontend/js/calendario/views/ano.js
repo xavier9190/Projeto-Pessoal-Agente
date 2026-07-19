@@ -20,17 +20,17 @@ function renderAno() {
     for (let d = 1; d <= total; d++) {
       const isToday = (mi === 6 && d === 19); // Julho/2026
       cells += `
-        <div class="text-center py-0.5 text-[11px] ${
+        <div style="text-align:center;padding:2px 0;font-size:11px;${
           isToday
-            ? 'bg-primary text-on-primary rounded-full font-bold'
-            : 'text-on-surface-variant hover:text-primary cursor-pointer'
+            ? 'background:#ffffff;color:#303032;border-radius:50%;font-weight:700;'
+            : 'color:#919095;cursor:pointer;'
         }">${d}</div>`;
     }
 
     return `
       <div>
-        <h4 class="font-headline-md text-on-surface text-sm font-semibold mb-3">${name}</h4>
-        <div class="grid grid-cols-7 text-center text-[10px] text-on-surface-variant/60 mb-1 gap-0.5">
+        <h4 style="font-size:14px;font-weight:600;color:#e5e2e1;margin-bottom:10px;">${name}</h4>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:10px;color:rgba(145,144,149,0.6);margin-bottom:4px;gap:2px;">
           <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
         </div>
         <div class="mini-month-grid">${cells}</div>

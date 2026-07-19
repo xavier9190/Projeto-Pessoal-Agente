@@ -13,7 +13,7 @@ function renderMes() {
 
   // Dias do mês anterior (preenchimento)
   prevDays.slice(0, firstDay).forEach(d => {
-    cells += `<div class="month-cell opacity-30 text-on-surface-variant font-label-md text-xs">${d}</div>`;
+    cells += `<div class="month-cell" style="opacity:0.3;color:#919095;font-size:12px;">${d}</div>`;
   });
 
   // Dias do mês atual
@@ -21,12 +21,16 @@ function renderMes() {
     const isToday = d === 19;
     const events  = SAMPLE_EVENTS.filter(e => e.day === d);
     const evHtml  = events.map(e => `
-      <div class="text-[10px] bg-primary/10 border-l-2 border-primary px-1.5 py-0.5 text-primary rounded-sm truncate mt-0.5">${e.label}</div>
+      <div style="font-size:10px;background:rgba(255,255,255,0.08);border-left:2px solid #c8c6c9;padding:2px 6px;color:#c8c6c9;border-radius:2px;margin-top:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${e.label}</div>
     `).join('');
 
+    const numStyle = isToday
+      ? 'display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#ffffff;color:#303032;font-weight:700;font-size:12px;'
+      : 'font-size:12px;color:#e5e2e1;';
+
     cells += `
-      <div class="month-cell ${isToday ? 'bg-primary/5' : ''} text-on-surface">
-        <span class="font-label-md text-xs ${isToday ? 'bg-primary text-on-primary rounded-full w-5 h-5 flex items-center justify-center font-bold' : ''}">${d}</span>
+      <div class="month-cell" style="${isToday ? 'background:rgba(255,255,255,0.03);' : ''}">
+        <span style="${numStyle}">${d}</span>
         ${evHtml}
       </div>`;
   }
@@ -34,16 +38,16 @@ function renderMes() {
   // Dias do próximo mês (preenchimento)
   const remaining = (7 - ((firstDay + totalDays) % 7)) % 7;
   for (let d = 1; d <= remaining; d++) {
-    cells += `<div class="month-cell opacity-30 text-on-surface-variant font-label-md text-xs">${d} ago.</div>`;
+    cells += `<div class="month-cell" style="opacity:0.3;color:#919095;font-size:12px;">${d} ago.</div>`;
   }
 
   const headers = WEEK_DAYS.map(d =>
-    `<div class="py-3 text-center border-r border-outline-variant/30 font-label-md text-on-surface-variant text-xs">${d}</div>`
+    `<div style="padding:12px 0;text-align:center;border-right:1px solid rgba(71,70,74,0.3);font-size:12px;color:#919095;letter-spacing:0.05em;font-weight:500;">${d}</div>`
   ).join('');
 
   return `
-    <div class="w-full bg-surface-container-low rounded-2xl border border-outline-variant overflow-hidden flex flex-col" style="min-height:100%;">
-      <div class="grid grid-cols-7 border-b border-outline-variant bg-surface-container">${headers}</div>
+    <div class="w-full rounded-2xl border border-outline-variant overflow-hidden flex flex-col" style="min-height:100%;background:#1c1b1b;">
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid rgba(71,70,74,0.6);background:#201f1f;">${headers}</div>
       <div class="month-grid flex-1">${cells}</div>
     </div>`;
 }

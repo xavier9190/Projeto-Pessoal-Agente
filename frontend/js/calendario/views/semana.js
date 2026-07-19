@@ -9,9 +9,9 @@ function renderSemana() {
   const dayLabels = days.map((d, i) => {
     const isToday = d === 19;
     return `
-      <div class="py-3 text-center border-r border-outline-variant/30">
-        <div class="text-[10px] text-on-surface-variant font-label-md mb-1">${WEEK_DAYS[i]}</div>
-        <div class="w-7 h-7 rounded-full ${isToday ? 'bg-primary text-on-primary' : ''} flex items-center justify-center ${isToday ? 'font-bold' : 'font-label-md'} mx-auto text-sm">${d}</div>
+      <div style="padding:12px 0;text-align:center;border-right:1px solid rgba(71,70,74,0.3);">
+        <div style="font-size:10px;color:#919095;letter-spacing:0.05em;font-weight:500;margin-bottom:4px;">${WEEK_DAYS[i]}</div>
+        <div style="width:28px;height:28px;border-radius:50%;${isToday ? 'background:#ffffff;color:#303032;font-weight:700;' : 'color:#e5e2e1;font-weight:500;'}display:inline-flex;align-items:center;justify-content:center;font-size:13px;">${d}</div>
       </div>`;
   }).join('');
 
@@ -19,13 +19,13 @@ function renderSemana() {
     const cols = days.map(d => {
       const ev = SAMPLE_EVENTS.find(e => e.day === d && e.hour === hi + 1);
       const evHtml = ev
-        ? `<div class="text-[10px] bg-primary/20 border-l-2 border-primary px-1 py-0.5 text-primary rounded-sm truncate mt-1">${ev.label}</div>`
+        ? `<div style="font-size:10px;background:rgba(200,198,201,0.12);border-left:2px solid #c8c6c9;padding:1px 4px;color:#c8c6c9;border-radius:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-top:4px;">${ev.label}</div>`
         : '';
       const timeLine = (hi === 1 && d === 19)
         ? `<div style="position:absolute;left:0;right:0;top:50%;height:2px;background:#e06060;"></div>`
         : '';
       return `
-        <div class="border-r border-b border-outline-variant/30 relative" style="height:48px;">
+        <div style="border-right:1px solid rgba(71,70,74,0.3);border-bottom:1px solid rgba(71,70,74,0.3);position:relative;height:48px;">
           ${timeLine}
           ${evHtml}
         </div>`;
@@ -33,16 +33,16 @@ function renderSemana() {
 
     return `
       <div style="display:grid;grid-template-columns:52px repeat(7,1fr);height:48px;">
-        <div class="time-label pt-1 border-b border-outline-variant/30">${h}</div>
+        <div class="time-label pt-1" style="border-bottom:1px solid rgba(71,70,74,0.3);">${h}</div>
         ${cols}
       </div>`;
   }).join('');
 
   return `
-    <div class="w-full bg-surface-container-low rounded-2xl border border-outline-variant overflow-hidden flex flex-col" style="min-height:100%;">
+    <div class="w-full rounded-2xl border border-outline-variant overflow-hidden flex flex-col" style="min-height:100%;background:#1c1b1b;">
       <!-- Cabeçalho dos dias -->
-      <div style="display:grid;grid-template-columns:52px repeat(7,1fr);background:#201f1f;" class="border-b border-outline-variant">
-        <div class="border-r border-outline-variant/30 py-3"></div>
+      <div style="display:grid;grid-template-columns:52px repeat(7,1fr);background:#201f1f;border-bottom:1px solid rgba(71,70,74,0.6);">
+        <div style="border-right:1px solid rgba(71,70,74,0.3);padding:12px 0;"></div>
         ${dayLabels}
       </div>
       <!-- Grade de horas -->
