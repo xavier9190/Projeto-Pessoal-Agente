@@ -1,8 +1,9 @@
 import { useMemo } from 'react'
-import { sampleEvents } from '@/data/calendario'
+import type { CalendarEvent } from '@/data/calendario'
 
 interface WeekViewProps {
   date: Date
+  events: CalendarEvent[]
 }
 
 const hours = Array.from({ length: 23 }, (_, i) => i + 1)
@@ -73,7 +74,7 @@ export default function WeekView({ date }: WeekViewProps) {
               {hour}:00
             </div>
             {weekDays.map((d) => {
-              const dayEvents = sampleEvents.filter(
+              const dayEvents = events.filter(
                 (e) =>
                   e.day === d.getDate() &&
                   e.month === d.getMonth() + 1 &&

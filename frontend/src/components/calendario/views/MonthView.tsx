@@ -1,8 +1,9 @@
 import { useMemo } from 'react'
-import { sampleEvents } from '@/data/calendario'
+import type { CalendarEvent } from '@/data/calendario'
 
 interface MonthViewProps {
   date: Date
+  events: CalendarEvent[]
 }
 
 const weekdayHeaders = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
@@ -58,7 +59,7 @@ export default function MonthView({ date }: MonthViewProps) {
             cell.day === now.getDate() &&
             cell.month === now.getMonth() + 1 &&
             cell.year === now.getFullYear()
-          const dayEvents = sampleEvents.filter(
+          const dayEvents = events.filter(
             (e) => e.day === cell.day && e.month === cell.month && e.year === cell.year
           )
           return (

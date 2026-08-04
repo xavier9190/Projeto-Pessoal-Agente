@@ -26,3 +26,32 @@ export async function enviarMensagem(
 
   return res.json() as Promise<ChatApiResponse>
 }
+
+// ---------------------------------------------------------------------------
+// Calendar
+// ---------------------------------------------------------------------------
+
+export interface CalendarApiEvent {
+  id: string
+  titulo: string
+  inicio: string   // ISO 8601
+  fim: string      // ISO 8601
+  colorId: string | null
+}
+
+export async function buscarEventos(
+  inicio: string,
+  fim: string,
+): Promise<CalendarApiEvent[]> {
+  const params = new URLSearchParams({ inicio, fim })
+  const res = await fetch(`${API_BASE}/api/calendar/events?${params}`)
+
+  if (!res.ok) {
+    const errorText = await res.text().catch(() => 'Erro desconhecido')
+    throw new Error(`Erro ${res.status}: ${errorText}`)
+  }
+
+  const data = await res.json() as { total: number; eventos: CalendarApiEvent[] }
+  return data.eventos
+}
+

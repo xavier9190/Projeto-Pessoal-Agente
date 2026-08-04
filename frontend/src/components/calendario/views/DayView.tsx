@@ -1,8 +1,9 @@
 import { useMemo } from 'react'
-import { sampleEvents } from '@/data/calendario'
+import type { CalendarEvent } from '@/data/calendario'
 
 interface DayViewProps {
   date: Date
+  events: CalendarEvent[]
 }
 
 const hours = Array.from({ length: 23 }, (_, i) => i + 1) // 1 to 23
@@ -15,13 +16,13 @@ export default function DayView({ date }: DayViewProps) {
     date.getFullYear() === now.getFullYear()
 
   const dayEvents = useMemo(() =>
-    sampleEvents.filter(
+    events.filter(
       (e) =>
         e.day === date.getDate() &&
         e.month === date.getMonth() + 1 &&
         e.year === date.getFullYear()
     ),
-    [date]
+    [date, events]
   )
 
   const currentHour = now.getHours()
