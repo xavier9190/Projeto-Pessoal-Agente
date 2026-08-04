@@ -92,7 +92,7 @@ export default function MiniCalendar({ date, onChange }: MiniCalendarProps) {
                     !cell.isCurrentMonth
                       ? 'text-on-surface-variant opacity-40 hover:bg-surface-container'
                       : isToday
-                      ? 'bg-primary text-on-primary font-bold'
+                      ? 'bg-blue-500 text-white font-bold'
                       : 'text-on-surface hover:bg-surface-container-highest'
                   }`}
                 >
