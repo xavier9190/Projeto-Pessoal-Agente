@@ -19,7 +19,7 @@ export default function UtilityPanel() {
           <h3 className="text-headline-md text-on-surface">Agendas</h3>
         </div>
 
-        <UpcomingEvents />
+        <UpcomingEvents maxHeightClass="max-h-[360px]" />
       </section>
 
       {/* Finanças Section */}

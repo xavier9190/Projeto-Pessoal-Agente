@@ -15,7 +15,7 @@ export default function CalendarSidePanel() {
       {/* Upcoming Events Section */}
       <div className="flex-1 p-6 flex flex-col min-h-0">
         <h3 className="text-body-md font-semibold text-on-surface mb-4">Próximos Eventos</h3>
-        <UpcomingEvents />
+        <UpcomingEvents maxHeightClass="max-h-[460px]" />
       </div>
 
       {/* Footer Sync */}

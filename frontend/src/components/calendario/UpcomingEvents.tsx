@@ -30,7 +30,7 @@ function formatDateLabel(d: Date): string {
   return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }).replace('.', '')
 }
 
-export default function UpcomingEvents() {
+export default function UpcomingEvents({ maxHeightClass = "max-h-[280px]" }: { maxHeightClass?: string }) {
   const [events, setEvents] = useState<SimpleEvent[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -79,8 +79,7 @@ export default function UpcomingEvents() {
   }
 
   return (
-    // max-h-[300px] permite mostrar aprox. 3 itens dependendo do tamanho, e scrolla o resto.
-    <div className="space-y-3 overflow-y-auto custom-scrollbar pr-2 max-h-[280px]">
+    <div className={`space-y-3 overflow-y-auto custom-scrollbar pr-2 ${maxHeightClass}`}>
       {events.map((ev) => (
         <div
           key={ev.id}
