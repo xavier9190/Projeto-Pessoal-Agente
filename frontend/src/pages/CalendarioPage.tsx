@@ -133,7 +133,7 @@ export default function CalendarioPage() {
       case 'ano':
         return <YearView date={currentDate} />
       case 'programacao':
-        return <ScheduleView />
+        return <ScheduleView events={events} />
     }
   }
 
