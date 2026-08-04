@@ -1,15 +1,39 @@
 import type { ChatMessage, ComplexContent } from '@/data/chat'
 
-interface MessageBubbleProps {
-  message: ChatMessage
+// ------------------------------------------------------------------
+// Loading bubble (typing indicator)
+// ------------------------------------------------------------------
+export function LoadingBubble() {
+  return (
+    <div className="flex gap-4 max-w-3xl">
+      {/* Avatar */}
+      <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-primary-container">
+        <span
+          className="material-symbols-outlined text-on-primary-container"
+          style={{ fontSize: '14px' }}
+        >
+          smart_toy
+        </span>
+      </div>
+
+      {/* Bubble */}
+      <div className="glass-panel rounded-2xl rounded-tl-none p-4 flex items-center gap-2">
+        <span className="typing-dot" />
+        <span className="typing-dot" />
+        <span className="typing-dot" />
+      </div>
+    </div>
+  )
 }
 
+// ------------------------------------------------------------------
+// Complex content renderer (unchanged)
+// ------------------------------------------------------------------
 function ComplexMessageContent({ content }: { content: ComplexContent }) {
   return (
     <div className="space-y-4">
       <p className="text-body-lg text-on-surface">{content.intro}</p>
 
-      {/* Mini cards */}
       <div className="grid grid-cols-2 gap-3">
         {content.cards.map((card, i) => (
           <div
@@ -24,7 +48,6 @@ function ComplexMessageContent({ content }: { content: ComplexContent }) {
         ))}
       </div>
 
-      {/* List items */}
       <ul className="space-y-2">
         {content.list.map((item, i) => (
           <li key={i} className="flex items-start gap-2 text-body-md text-on-surface-variant">
@@ -42,9 +65,18 @@ function ComplexMessageContent({ content }: { content: ComplexContent }) {
   )
 }
 
+// ------------------------------------------------------------------
+// Regular message bubble
+// ------------------------------------------------------------------
+interface MessageBubbleProps {
+  message: ChatMessage
+}
+
 export default function MessageBubble({ message }: MessageBubbleProps) {
   const isUser = message.role === 'user'
-  const isComplex = typeof message.content === 'object' && (message.content as ComplexContent).type === 'complex'
+  const isError = message.role === 'ai' && (message.content as string)?.startsWith?.('[erro]')
+  const isComplex =
+    typeof message.content === 'object' && (message.content as ComplexContent).type === 'complex'
 
   return (
     <div className={`flex gap-4 ${isUser ? 'ml-auto flex-row-reverse' : ''} max-w-3xl`}>
@@ -53,11 +85,15 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
         className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
           isUser
             ? 'bg-surface-container-highest border border-outline-variant'
-            : 'bg-primary-container'
+            : isError
+              ? 'bg-error-container'
+              : 'bg-primary-container'
         }`}
       >
         <span
-          className={`material-symbols-outlined ${isUser ? 'text-on-surface' : 'text-on-primary-container'}`}
+          className={`material-symbols-outlined ${
+            isUser ? 'text-on-surface' : isError ? 'text-on-error-container' : 'text-on-primary-container'
+          }`}
           style={{ fontSize: '14px' }}
         >
           {message.icon}
@@ -66,16 +102,22 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
 
       {/* Bubble */}
       <div
-        className={`p-4 rounded-2xl ${
+        className={`rounded-2xl ${
           isUser
             ? 'bg-surface-container-high border border-outline-variant rounded-tr-none'
-            : 'glass-panel rounded-tl-none'
+            : isError
+              ? 'bg-error-container/30 border border-error-container rounded-tl-none'
+              : 'glass-panel rounded-tl-none'
         } ${isComplex ? 'p-5' : 'p-4'}`}
       >
         {isComplex ? (
           <ComplexMessageContent content={message.content as ComplexContent} />
         ) : (
-          <p className="text-body-lg text-on-surface leading-relaxed">
+          <p
+            className={`text-body-lg leading-relaxed ${
+              isError ? 'text-error' : 'text-on-surface'
+            }`}
+          >
             {message.content as string}
           </p>
         )}
