@@ -8,7 +8,7 @@ interface MonthViewProps {
 
 const weekdayHeaders = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
 
-export default function MonthView({ date }: MonthViewProps) {
+export default function MonthView({ date, events }: MonthViewProps) {
   const now = new Date()
 
   const cells = useMemo(() => {
