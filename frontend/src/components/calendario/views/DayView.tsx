@@ -8,7 +8,7 @@ interface DayViewProps {
 
 const hours = Array.from({ length: 23 }, (_, i) => i + 1) // 1 to 23
 
-export default function DayView({ date }: DayViewProps) {
+export default function DayView({ date, events }: DayViewProps) {
   const now = new Date()
   const isToday =
     date.getDate() === now.getDate() &&

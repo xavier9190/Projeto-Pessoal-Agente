@@ -20,7 +20,7 @@ function getWeekDays(date: Date): Date[] {
   })
 }
 
-export default function WeekView({ date }: WeekViewProps) {
+export default function WeekView({ date, events }: WeekViewProps) {
   const now = new Date()
   const weekDays = useMemo(() => getWeekDays(date), [date])
 
