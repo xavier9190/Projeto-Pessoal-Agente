@@ -4,11 +4,12 @@ import type { CalendarEvent } from '@/data/calendario'
 interface DayViewProps {
   date: Date
   events: CalendarEvent[]
+  onEventClick?: (ev: CalendarEvent, rect: DOMRect) => void
 }
 
 const hours = Array.from({ length: 23 }, (_, i) => i + 1) // 1 to 23
 
-export default function DayView({ date, events }: DayViewProps) {
+export default function DayView({ date, events, onEventClick }: DayViewProps) {
   const now = new Date()
   const isToday =
     date.getDate() === now.getDate() &&
@@ -70,6 +71,10 @@ export default function DayView({ date, events }: DayViewProps) {
                     key={ev.id}
                     className="absolute left-2 right-2 rounded px-2 py-0.5 text-[11px] font-medium text-white cursor-pointer hover:opacity-90 transition-opacity"
                     style={{ backgroundColor: ev.color || '#3b82f6', top: '2px', bottom: '2px' }}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onEventClick?.(ev, e.currentTarget.getBoundingClientRect())
+                    }}
                   >
                     {ev.title}
                   </div>

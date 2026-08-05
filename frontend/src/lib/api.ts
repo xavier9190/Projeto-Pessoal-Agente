@@ -55,3 +55,37 @@ export async function buscarEventos(
   return data.eventos
 }
 
+export interface AtualizarEventoPayload {
+  inicio?: string
+  fim?: string
+  color_id?: string
+}
+
+export async function atualizarEvento(
+  id: string,
+  payload: AtualizarEventoPayload,
+): Promise<CalendarApiEvent> {
+  const res = await fetch(`${API_BASE}/api/calendar/events/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+
+  if (!res.ok) {
+    const errorText = await res.text().catch(() => 'Erro desconhecido')
+    throw new Error(`Erro ${res.status}: ${errorText}`)
+  }
+
+  return res.json() as Promise<CalendarApiEvent>
+}
+
+export async function excluirEvento(id: string): Promise<void> {
+  const res = await fetch(`${API_BASE}/api/calendar/events/${id}`, {
+    method: 'DELETE',
+  })
+
+  if (!res.ok) {
+    const errorText = await res.text().catch(() => 'Erro desconhecido')
+    throw new Error(`Erro ${res.status}: ${errorText}`)
+  }
+}

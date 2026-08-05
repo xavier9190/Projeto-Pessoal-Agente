@@ -2,6 +2,7 @@ import type { CalendarEvent } from '@/data/calendario'
 
 interface ScheduleViewProps {
   events: CalendarEvent[]
+  onEventClick?: (ev: CalendarEvent, rect: DOMRect) => void
 }
 
 const MONTHS = [
@@ -14,7 +15,7 @@ function formatHour(h: number) {
   return `${String(h).padStart(2, '0')}:00`
 }
 
-export default function ScheduleView({ events }: ScheduleViewProps) {
+export default function ScheduleView({ events, onEventClick }: ScheduleViewProps) {
   // Agrupa eventos por data (YYYY-MM-DD) e ordena cronologicamente
   const grouped = events
     .slice()
@@ -73,6 +74,10 @@ export default function ScheduleView({ events }: ScheduleViewProps) {
                 <div
                   key={ev.id}
                   className="glass-panel rounded-xl p-3 flex items-center gap-3 hover:border-outline transition-colors cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onEventClick?.(ev, e.currentTarget.getBoundingClientRect())
+                  }}
                 >
                   <span
                     className="w-2 h-2 rounded-full shrink-0"

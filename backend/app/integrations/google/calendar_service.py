@@ -100,6 +100,46 @@ class GoogleCalendarService:
         )
         return _parse_event(created)
 
+    # ------------------------------------------------------------------
+    # Atualização parcial de evento
+    # ------------------------------------------------------------------
+    def atualizar_evento(
+        self,
+        event_id: str,
+        inicio: Optional[str] = None,
+        fim: Optional[str] = None,
+        color_id: Optional[str] = None,
+    ) -> dict:
+        """
+        Atualiza parcialmente um evento existente via PATCH.
+
+        Apenas os campos fornecidos são alterados.
+        Retorna dict com: id, titulo, inicio, fim, colorId.
+        """
+        body: dict = {}
+        if inicio is not None:
+            body["start"] = _datetime_obj(inicio)
+        if fim is not None:
+            body["end"] = _datetime_obj(fim)
+        if color_id is not None:
+            body["colorId"] = color_id
+
+        updated = (
+            self._service.events()
+            .patch(calendarId=self._calendar_id, eventId=event_id, body=body)
+            .execute()
+        )
+        return _parse_event(updated)
+
+    # ------------------------------------------------------------------
+    # Exclusão de evento
+    # ------------------------------------------------------------------
+    def excluir_evento(self, event_id: str) -> None:
+        """Exclui permanentemente um evento do calendário."""
+        self._service.events().delete(
+            calendarId=self._calendar_id, eventId=event_id
+        ).execute()
+
 
 # ------------------------------------------------------------------
 # Helpers privados

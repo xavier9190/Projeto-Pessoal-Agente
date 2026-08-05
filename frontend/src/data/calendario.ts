@@ -7,7 +7,10 @@ export interface CalendarEvent {
   year: number
   hour: number
   title: string
-  color?: string
+  color?: string    // hex color for display
+  colorId?: string  // Google Calendar colorId for editing
+  fim?: string      // ISO 8601 end datetime
+  lembrete?: string // ex: '30 minutos antes'
 }
 
 export interface ScheduleItem {
