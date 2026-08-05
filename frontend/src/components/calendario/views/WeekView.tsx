@@ -4,6 +4,7 @@ import type { CalendarEvent } from '@/data/calendario'
 interface WeekViewProps {
   date: Date
   events: CalendarEvent[]
+  onEventClick?: (ev: CalendarEvent, rect: DOMRect) => void
 }
 
 const hours = Array.from({ length: 23 }, (_, i) => i + 1)
@@ -20,7 +21,7 @@ function getWeekDays(date: Date): Date[] {
   })
 }
 
-export default function WeekView({ date, events }: WeekViewProps) {
+export default function WeekView({ date, events, onEventClick }: WeekViewProps) {
   const now = new Date()
   const weekDays = useMemo(() => getWeekDays(date), [date])
 
@@ -91,6 +92,10 @@ export default function WeekView({ date, events }: WeekViewProps) {
                       key={ev.id}
                       className="rounded px-1.5 py-0.5 text-[10px] font-medium text-white cursor-pointer hover:opacity-90 transition-opacity truncate"
                       style={{ backgroundColor: ev.color || '#3b82f6' }}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        onEventClick?.(ev, e.currentTarget.getBoundingClientRect())
+                      }}
                     >
                       {ev.title}
                     </div>

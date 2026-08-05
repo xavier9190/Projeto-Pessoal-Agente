@@ -53,3 +53,38 @@ def criar_evento(body: CriarEventoBody):
         return evento
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
+
+
+# ------------------------------------------------------------------
+# PATCH /api/calendar/events/{event_id}  (edição restrita: data/hora/cor)
+# ------------------------------------------------------------------
+class AtualizarEventoBody(BaseModel):
+    inicio: str | None = None   # ISO 8601, ex: '2025-08-10T10:00:00'
+    fim: str | None = None      # ISO 8601, ex: '2025-08-10T11:00:00'
+    color_id: str | None = None # colorId do Google Calendar
+
+
+@router.patch("/events/{event_id}", summary="Atualiza data/hora/cor de um evento")
+def atualizar_evento(event_id: str, body: AtualizarEventoBody):
+    """Atualiza parcialmente um evento (apenas inicio, fim e/ou color_id)."""
+    if not any([body.inicio, body.fim, body.color_id]):
+        raise HTTPException(status_code=422, detail="Nenhum campo para atualizar fornecido.")
+    service = _get_service()
+    try:
+        evento = service.atualizar_evento(event_id, body.inicio, body.fim, body.color_id)
+        return evento
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+# ------------------------------------------------------------------
+# DELETE /api/calendar/events/{event_id}
+# ------------------------------------------------------------------
+@router.delete("/events/{event_id}", summary="Exclui um evento do Google Calendar", status_code=204)
+def excluir_evento(event_id: str):
+    """Exclui permanentemente um evento do calendário."""
+    service = _get_service()
+    try:
+        service.excluir_evento(event_id)
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))

@@ -4,11 +4,12 @@ import type { CalendarEvent } from '@/data/calendario'
 interface MonthViewProps {
   date: Date
   events: CalendarEvent[]
+  onEventClick?: (ev: CalendarEvent, rect: DOMRect) => void
 }
 
 const weekdayHeaders = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
 
-export default function MonthView({ date, events }: MonthViewProps) {
+export default function MonthView({ date, events, onEventClick }: MonthViewProps) {
   const now = new Date()
 
   const cells = useMemo(() => {
@@ -80,8 +81,12 @@ export default function MonthView({ date, events }: MonthViewProps) {
                 {dayEvents.map((ev) => (
                   <div
                     key={ev.id}
-                    className="rounded px-1 py-0.5 text-[10px] font-medium text-white truncate"
+                    className="rounded px-1 py-0.5 text-[10px] font-medium text-white truncate cursor-pointer hover:opacity-90 transition-opacity"
                     style={{ backgroundColor: ev.color || '#3b82f6' }}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onEventClick?.(ev, e.currentTarget.getBoundingClientRect())
+                    }}
                   >
                     {ev.title}
                   </div>

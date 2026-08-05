@@ -7,7 +7,14 @@ import MonthView from '@/components/calendario/views/MonthView'
 import YearView from '@/components/calendario/views/YearView'
 import ScheduleView from '@/components/calendario/views/ScheduleView'
 import CalendarSidePanel from '@/components/calendario/CalendarSidePanel'
-import { buscarEventos, type CalendarApiEvent } from '@/lib/api'
+import EventPopup from '@/components/calendario/EventPopup'
+import {
+  buscarEventos,
+  atualizarEvento,
+  excluirEvento,
+  type CalendarApiEvent,
+  type AtualizarEventoPayload,
+} from '@/lib/api'
 import { COLOR_MAP, COLOR_DEFAULT } from '@/lib/colors'
 
 // ---------------------------------------------------------------------------
@@ -46,7 +53,6 @@ function getVisibleRange(date: Date, view: CalendarView): [string, string] {
 
 /** Converte evento bruto da API para o formato CalendarEvent das views. */
 function apiEventToCalendarEvent(ev: CalendarApiEvent): CalendarEvent {
-  // inicio: ex. '2026-08-05T14:00:00' ou '2026-08-05'
   const dt = new Date(ev.inicio)
   return {
     id: ev.id,
@@ -56,6 +62,8 @@ function apiEventToCalendarEvent(ev: CalendarApiEvent): CalendarEvent {
     hour: dt.getHours(),
     title: ev.titulo,
     color: ev.colorId ? (COLOR_MAP[ev.colorId] ?? COLOR_DEFAULT) : COLOR_DEFAULT,
+    colorId: ev.colorId ?? undefined,
+    fim: ev.fim,
   }
 }
 
@@ -101,6 +109,10 @@ export default function CalendarioPage() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [events, setEvents] = useState<CalendarEvent[]>([])
 
+  // Popup state
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null)
+  const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null)
+
   const fetchEvents = useCallback(async (d: Date, v: CalendarView) => {
     const [inicio, fim] = getVisibleRange(d, v)
     try {
@@ -122,18 +134,53 @@ export default function CalendarioPage() {
   const handleNext = () => setCurrentDate((d) => moveDate(d, view, +1))
   const handleToday = () => setCurrentDate(new Date())
 
+  // ---------------------------------------------------------------------------
+  // Popup handlers
+  // ---------------------------------------------------------------------------
+  const handleEventClick = useCallback((ev: CalendarEvent, rect: DOMRect) => {
+    setSelectedEvent(ev)
+    setAnchorRect(rect)
+  }, [])
+
+  const handlePopupClose = useCallback(() => {
+    setSelectedEvent(null)
+    setAnchorRect(null)
+  }, [])
+
+  const handleEventUpdate = useCallback(async (id: string, payload: AtualizarEventoPayload) => {
+    try {
+      await atualizarEvento(id, payload)
+      handlePopupClose()
+      fetchEvents(currentDate, view)
+    } catch (err) {
+      console.error('[CalendarioPage] Erro ao atualizar evento:', err)
+      throw err // re-throw so EventPopup can show error state
+    }
+  }, [currentDate, view, fetchEvents, handlePopupClose])
+
+  const handleEventDelete = useCallback(async (id: string) => {
+    try {
+      await excluirEvento(id)
+      handlePopupClose()
+      fetchEvents(currentDate, view)
+    } catch (err) {
+      console.error('[CalendarioPage] Erro ao excluir evento:', err)
+      throw err
+    }
+  }, [currentDate, view, fetchEvents, handlePopupClose])
+
   const renderView = () => {
     switch (view) {
       case 'dia':
-        return <DayView date={currentDate} events={events} />
+        return <DayView date={currentDate} events={events} onEventClick={handleEventClick} />
       case 'semana':
-        return <WeekView date={currentDate} events={events} />
+        return <WeekView date={currentDate} events={events} onEventClick={handleEventClick} />
       case 'mes':
-        return <MonthView date={currentDate} events={events} />
+        return <MonthView date={currentDate} events={events} onEventClick={handleEventClick} />
       case 'ano':
         return <YearView date={currentDate} />
       case 'programacao':
-        return <ScheduleView events={events} />
+        return <ScheduleView events={events} onEventClick={handleEventClick} />
     }
   }
 
@@ -156,6 +203,17 @@ export default function CalendarioPage() {
 
       {/* Right Panel */}
       <CalendarSidePanel />
+
+      {/* Event Details Popup */}
+      {selectedEvent && anchorRect && (
+        <EventPopup
+          event={selectedEvent}
+          anchorRect={anchorRect}
+          onClose={handlePopupClose}
+          onUpdate={handleEventUpdate}
+          onDelete={handleEventDelete}
+        />
+      )}
     </div>
   )
 }
