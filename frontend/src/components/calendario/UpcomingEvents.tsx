@@ -45,11 +45,24 @@ export default function UpcomingEvents({ maxHeightClass = "max-h-[280px]" }: { m
 
         const parsed = apiEvents.map((ev) => {
           const dt = new Date(ev.inicio)
+          const isAllDay = dt.getHours() === 0 && dt.getMinutes() === 0 && !ev.fim
+
+          let timeStr = 'Dia inteiro'
+          if (!isAllDay) {
+            const startStr = formatTime(dt)
+            if (ev.fim) {
+              const fimDate = new Date(ev.fim)
+              timeStr = `${startStr} - ${formatTime(fimDate)}`
+            } else {
+              timeStr = startStr
+            }
+          }
+
           return {
             id: ev.id,
             title: ev.titulo,
             dateStr: formatDateLabel(dt),
-            timeStr: dt.getHours() > 0 ? formatTime(dt) : 'Dia inteiro',
+            timeStr,
             color: ev.colorId ? (COLOR_MAP[ev.colorId] ?? COLOR_DEFAULT) : COLOR_DEFAULT,
             timestamp: dt.getTime(),
           }
