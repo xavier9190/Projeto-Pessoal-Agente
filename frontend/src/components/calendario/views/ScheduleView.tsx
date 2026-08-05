@@ -11,8 +11,15 @@ const MONTHS = [
 ]
 const WEEKDAYS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 
-function formatHour(h: number) {
-  return `${String(h).padStart(2, '0')}:00`
+function formatEventTime(ev: CalendarEvent) {
+  if (ev.hour === 0) return 'Dia inteiro'
+  const start = `${String(ev.hour).padStart(2, '0')}:00`
+  if (!ev.fim) return start
+  
+  const fimDate = new Date(ev.fim)
+  const endHour = String(fimDate.getHours()).padStart(2, '0')
+  const endMin = String(fimDate.getMinutes()).padStart(2, '0')
+  return `${start} - ${endHour}:${endMin}`
 }
 
 export default function ScheduleView({ events, onEventClick }: ScheduleViewProps) {
@@ -86,7 +93,7 @@ export default function ScheduleView({ events, onEventClick }: ScheduleViewProps
                   <div className="flex-1">
                     <p className="text-body-md text-on-surface">{ev.title}</p>
                     <p className="text-[11px] text-on-surface-variant mt-0.5">
-                      {ev.hour > 0 ? formatHour(ev.hour) : 'Dia inteiro'}
+                      {formatEventTime(ev)}
                     </p>
                   </div>
                 </div>
